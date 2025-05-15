@@ -1,4 +1,4 @@
-> # next-tab-notification
+> # next-tab-notifications
 
 A lightweight, versatile Next.js/React hook that updates the browser tab's title and favicon—emoji or image—when users navigate away or via manual triggers. Keep your app top‑of‑mind and boost engagement with minimal dependencies and full TypeScript support.
 
@@ -11,7 +11,7 @@ A lightweight, versatile Next.js/React hook that updates the browser tab's title
     See how tab notifications can transform your user experience with our interactive demo.<br/>
     <em>Click, explore, and watch the magic happen! ✨🚀</em>
   </p>
-  <a href="https://next-tab-notifications.vercel.app" target="_blank" rel="noopener noreferrer">
+  <a href="https://next-tab-notifications.vercel.app/" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/badge/LIVE_DEMO-Try_Now!-blue?style=for-the-badge&logo=react" alt="Live Demo" />
   </a>
 </div>
@@ -58,13 +58,13 @@ A lightweight, versatile Next.js/React hook that updates the browser tab's title
 
 ```bash
 # npm
-tpn install next-tab-notification
+npn install next-tab-notifications
 
 # yarn
-yarn add next-tab-notification
+yarn add next-tab-notifications
 
 # pnpm
-pnpm add next-tab-notification
+pnpm add next-tab-notifications
 ```
 
 ---
@@ -74,7 +74,7 @@ pnpm add next-tab-notification
 ### Basic Usage
 
 ```jsx
-import { useTabNotification } from "next-tab-notification";
+import { useTabNotification } from "next-tab-notifications";
 
 function MyComponent() {
 	const { isActive } = useTabNotification({ title: "Come back! 👋" });
@@ -92,7 +92,7 @@ function MyComponent() {
 ### Using Emoji Favicons
 
 ```jsx
-import { useTabNotification } from "next-tab-notification";
+import { useTabNotification } from "next-tab-notifications";
 
 function ChatApp() {
 	useTabNotification({
@@ -111,7 +111,7 @@ function ChatApp() {
 ### Manual Trigger
 
 ```jsx
-import { useTabNotification } from "next-tab-notification";
+import { useTabNotification } from "next-tab-notifications";
 import { Button } from "@fluentui/react";
 
 function NotificationDemo() {
@@ -142,7 +142,7 @@ function NotificationDemo() {
 ### Using the Demo Component
 
 ```jsx
-import { TabNotificationDemo } from "next-tab-notification";
+import { TabNotificationDemo } from "next-tab-notifications";
 
 function App() {
 	return (
