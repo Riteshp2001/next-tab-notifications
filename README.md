@@ -23,8 +23,9 @@ A lightweight, versatile Next.js/React hook that updates the browser tab's title
 2. [Installation](#-installation)
 3. [Usage](#-usage)
    - [Basic](#basic-usage)
+   - [Cycling Multiple Titles](#cycling-multiple-titles)
    - [Emoji Favicons](#using-emoji-favicons)
-   - [Manual Trigger](#manual-trigger)
+   - [Manual Trigger (Per Feature)](#manual-trigger-per-feature)
    - [Demo Component](#using-the-demo-component)
 4. [API Reference](#-api-reference)
    - [`useTabNotification(options)`](#usetabnotificationoptions)
@@ -77,15 +78,29 @@ pnpm add next-tab-notifications
 import { useTabNotification } from "next-tab-notifications";
 
 function MyComponent() {
-	const { isActive } = useTabNotification({ title: "Come back! 👋" });
+  const { isActive } = useTabNotification({ titles: "Come back! 👋" });
 
-	return (
-		<div>
-			<h1>My App</h1>
-			<p>Switch tabs to see the title change.</p>
-			<p>Status: {isActive ? "Active" : "Inactive"}</p>
-		</div>
-	);
+  return (
+    <div>
+      <h1>My App</h1>
+      <p>Switch tabs to see the title change.</p>
+      <p>Status: {isActive ? "Active" : "Inactive"}</p>
+    </div>
+  );
+}
+```
+
+### Cycling Multiple Titles
+
+```jsx
+import { useTabNotification } from "next-tab-notifications";
+
+function CycleDemo() {
+  useTabNotification({
+    titles: ["Hey! 👋", "Don't forget me!", "Come back! 🚀"],
+    titleInterval: 1500,
+  });
+  return null;
 }
 ```
 
@@ -95,47 +110,46 @@ function MyComponent() {
 import { useTabNotification } from "next-tab-notifications";
 
 function ChatApp() {
-	useTabNotification({
-		title: "New messages! 📬",
-		favicons: [
-			{ emoji: "🔔", backgroundColor: "#0078d4" },
-			{ emoji: "📬", backgroundColor: "#0078d4" },
-		],
-		faviconInterval: 500,
-	});
-
-	return null;
+  useTabNotification({
+    titles: "New messages! 📬",
+    favicons: [
+      { emoji: "🔔", backgroundColor: "#0078d4" },
+      { emoji: "📬", backgroundColor: "#0078d4" },
+    ],
+    faviconInterval: 500,
+  });
+  return null;
 }
 ```
 
-### Manual Trigger
+### Manual Trigger (Per Feature)
 
 ```jsx
 import { useTabNotification } from "next-tab-notifications";
-import { Button } from "@fluentui/react";
 
 function NotificationDemo() {
-	const { isActive, startNotification, stopNotification, toggleNotification } =
-		useTabNotification({
-			title: "Notification is active! 🔔",
-			favicons: [
-				{ emoji: "🔔", backgroundColor: "#0078d4" },
-				{ emoji: "🔕", backgroundColor: "#0078d4" },
-			],
-			faviconInterval: 800,
-			manualTrigger: true,
-		});
+  const { isActive, startNotification, stopNotification, toggleNotification } =
+    useTabNotification({
+      titles: ["Manual Title 1", "Manual Title 2"],
+      favicons: [
+        { emoji: "🔔", backgroundColor: "#0078d4" },
+        { emoji: "🔕", backgroundColor: "#0078d4" },
+      ],
+      faviconInterval: 800,
+      titleInterval: 2000,
+      manualTrigger: { title: true, favicon: false }, // Only title is manual
+    });
 
-	return (
-		<div>
-			<h1>Manual Notification Demo</h1>
-			<p>Status: {isActive ? "Active" : "Inactive"}</p>
-			<Button onClick={toggleNotification}>
-				{isActive ? "Stop" : "Start"} Notification
-			</Button>
-			{isActive && <Button onClick={stopNotification}>Reset</Button>}
-		</div>
-	);
+  return (
+    <div>
+      <h1>Manual Notification Demo</h1>
+      <p>Status: {isActive ? "Active" : "Inactive"}</p>
+      <button onClick={toggleNotification}>
+        {isActive ? "Stop" : "Start"} Notification
+      </button>
+      {isActive && <button onClick={stopNotification}>Reset</button>}
+    </div>
+  );
 }
 ```
 
@@ -145,12 +159,12 @@ function NotificationDemo() {
 import { TabNotificationDemo } from "next-tab-notifications";
 
 function App() {
-	return (
-		<div>
-			<h1>My App</h1>
-			<TabNotificationDemo />
-		</div>
-	);
+  return (
+    <div>
+      <h1>My App</h1>
+      <TabNotificationDemo />
+    </div>
+  );
 }
 ```
 
@@ -164,12 +178,13 @@ Main hook to control tab notifications.
 
 #### Options
 
-| Property          | Type                        | Default | Description                                                                       |
-| ----------------- | --------------------------- | ------- | --------------------------------------------------------------------------------- |
-| `title`           | `string`                    | `''`    | Title to display when notification is active.                                     |
-| `favicons`        | `(string \| EmojiConfig)[]` | `[]`    | Array of image URLs or emoji objects to cycle.                                    |
-| `faviconInterval` | `number`                    | `1000`  | Interval in milliseconds for favicon animation.                                   |
-| `manualTrigger`   | `boolean`                   | `false` | If `true`, notifications only start via API calls, not on tab visibility changes. |
+| Property          | Type                              | Default   | Description                                                                                 |
+| ----------------- | --------------------------------- | --------- | ------------------------------------------------------------------------------------------- |
+| `titles`          | `string \| string[]`              | `''`      | Title or array of titles to display/cycle when notification is active.                      |
+| `favicons`        | `(string \| EmojiConfig)[]`       | `[]`      | Array of image URLs or emoji objects to cycle.                                              |
+| `faviconInterval` | `number`                          | `1000`    | Interval in milliseconds for favicon animation.                                             |
+| `titleInterval`   | `number`                          | `2000`    | Interval in milliseconds for cycling titles (if array).                                     |
+| `manualTrigger`   | `boolean \| ManualConfig`         | `false`   | If `true`, notifications only start via API calls. If object, control per feature.          |
 
 ##### `EmojiConfig`
 
@@ -178,6 +193,13 @@ Main hook to control tab notifications.
 | `emoji`           | `string` | **required**    | Emoji character for favicon.         |
 | `backgroundColor` | `string` | `'transparent'` | Canvas background color.             |
 | `size`            | `number` | `32`            | Size of generated favicon in pixels. |
+
+##### `ManualConfig`
+
+| Property   | Type      | Default | Description                                              |
+| ---------- | --------- | ------- | -------------------------------------------------------- |
+| `title`    | `boolean` |         | If true, title only changes via manual trigger.          |
+| `favicon`  | `boolean` |         | If true, favicon only changes via manual trigger.        |
 
 #### Return Value
 
@@ -254,4 +276,9 @@ Integrate with state management or effect hooks to trigger based on real events.
 
 MIT © [Ritesh Pandit](https://github.com/Riteshp2001)
 
-> Also Last Thing Check out my [<span style="color: #0078d4">Portfolio</span>](https://riteshdpandit.vercel.app)
+---
+
+## 🙌 Also, one Last Thing
+
+Check out my [**Portfolio**](https://riteshdpandit.vercel.app)!
+
